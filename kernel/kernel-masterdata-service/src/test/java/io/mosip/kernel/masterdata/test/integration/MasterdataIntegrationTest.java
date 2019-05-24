@@ -5887,5 +5887,37 @@ public class MasterdataIntegrationTest {
 				get("/users/110001/2018-01-01T10:10:30.956Z"))
 				.andExpect(status().isInternalServerError());
 	}
+	
+	
+	//------------------------------------------------RegistrationMachine Get ------------------------------------------------
+	@Test
+	@WithUserDetails("test")
+	public void getRegistrationCenterMachineMappingSuccessTest() throws Exception {
+		LocalDateTime specificDate = LocalDateTime.of(2018, Month.JANUARY, 1, 10, 10, 30);
+		Timestamp validDateTime = Timestamp.valueOf(specificDate);
+		List<Object[]> objectMachineList = new ArrayList<>();
+		Object objects[] = { "10001","10001", "Machine 4", "NT894252578", "8C-16-45-5A-62-41", "192.168.0.259", "1001", "eng", true, validDateTime,
+				"superadmin", null,"110001",null };
+		objectMachineList.add(objects);
+		when(registrationCenterMachineRepository.findByRegCenterIdAndIsDeletedFalseOrIsDeletedIsNullMachine(Mockito.anyString()))
+				.thenReturn(objectMachineList);
+		mockMvc.perform(get("/registrationcentermachine/{regCenterId}", "10001")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("test")
+	public void getRegistrationCenterMachineMappingNullResponseTest() throws Exception {
+		when(registrationCenterMachineRepository.findByRegCenterIdAndIsDeletedFalseOrIsDeletedIsNullMachine(Mockito.anyString())).thenReturn(null);
+		mockMvc.perform(get("/registrationcentermachine/{regCenterId}", "10001")).andExpect(status().isOk());
+	}
+
+	@Test
+	@WithUserDetails("test")
+	public void getRegistrationCenterMachineMappingFetchExceptionTest() throws Exception {
+		when(registrationCenterMachineRepository.findByRegCenterIdAndIsDeletedFalseOrIsDeletedIsNullMachine(Mockito.anyString()))
+				.thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/registrationcentermachine/{regCenterId}", "10001"))
+				.andExpect(status().isInternalServerError());
+	}
 
 }
