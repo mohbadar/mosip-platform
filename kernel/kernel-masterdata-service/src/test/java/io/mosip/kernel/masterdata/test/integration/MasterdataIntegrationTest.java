@@ -3431,8 +3431,8 @@ public class MasterdataIntegrationTest {
 				MockMvcRequestBuilders.post("/machines").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 	}
-	
-	//TODO:
+
+	// TODO:
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void createInActivatedMachineTest() throws Exception {
@@ -3449,8 +3449,6 @@ public class MasterdataIntegrationTest {
 		mockMvc.perform(post("/admin/machines").contentType(MediaType.APPLICATION_JSON).content(machineJson))
 				.andExpect(status().isOk());
 	}
-
-	
 
 	@Test
 	@WithUserDetails("zonal-admin")
@@ -3490,7 +3488,6 @@ public class MasterdataIntegrationTest {
 				MockMvcRequestBuilders.post("/admin/machines").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 	}
-
 
 	@Test
 	@WithUserDetails("test")
@@ -4081,44 +4078,7 @@ public class MasterdataIntegrationTest {
 		mockMvc.perform(post("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 	}
-
-	@Test
-	@WithUserDetails("test")
-	public void addDocumentTypesDatabaseConnectionExceptionTest() throws Exception {
-		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.idtype.create");
-		requestDto.setVersion("1.0");
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
-		documentTypeDto.setCode("D001");
-		documentTypeDto.setDescription("Proof Of Identity");
-		documentTypeDto.setIsActive(true);
-		documentTypeDto.setLangCode("eng");
-		documentTypeDto.setName("POI");
-		requestDto.setRequest(documentTypeDto);
-		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentTypeRepository.create(Mockito.any()))
-				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
-		mockMvc.perform(post("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
-				.andExpect(status().isInternalServerError());
-	}
-
-	@Test
-	@WithUserDetails("test")
-	public void addDocumentTypesLangCodeValidationTest() throws Exception {
-		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.idtype.create");
-		requestDto.setVersion("1.0");
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
-		documentTypeDto.setCode("D001");
-		documentTypeDto.setDescription("Proof Of Identity");
-		documentTypeDto.setIsActive(true);
-		documentTypeDto.setLangCode("akk");
-		documentTypeDto.setName("POI");
-		requestDto.setRequest(documentTypeDto);
-		String contentJson = mapper.writeValueAsString(requestDto);
-		mockMvc.perform(post("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
-				.andExpect(status().isOk());
-	}
+	// TODO:
 
 	@Test
 	@WithUserDetails("zonal-admin")
@@ -4158,6 +4118,44 @@ public class MasterdataIntegrationTest {
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
 		mockMvc.perform(post("/admin/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	@WithUserDetails("test")
+	public void addDocumentTypesDatabaseConnectionExceptionTest() throws Exception {
+		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.idtype.create");
+		requestDto.setVersion("1.0");
+		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		documentTypeDto.setCode("D001");
+		documentTypeDto.setDescription("Proof Of Identity");
+		documentTypeDto.setIsActive(true);
+		documentTypeDto.setLangCode("eng");
+		documentTypeDto.setName("POI");
+		requestDto.setRequest(documentTypeDto);
+		String contentJson = mapper.writeValueAsString(requestDto);
+		when(documentTypeRepository.create(Mockito.any()))
+				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
+		mockMvc.perform(post("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
+				.andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	@WithUserDetails("test")
+	public void addDocumentTypesLangCodeValidationTest() throws Exception {
+		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
+		requestDto.setId("mosip.idtype.create");
+		requestDto.setVersion("1.0");
+		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
+		documentTypeDto.setCode("D001");
+		documentTypeDto.setDescription("Proof Of Identity");
+		documentTypeDto.setIsActive(true);
+		documentTypeDto.setLangCode("akk");
+		documentTypeDto.setName("POI");
+		requestDto.setRequest(documentTypeDto);
+		String contentJson = mapper.writeValueAsString(requestDto);
+		mockMvc.perform(post("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
+				.andExpect(status().isOk());
 	}
 
 	@Test
