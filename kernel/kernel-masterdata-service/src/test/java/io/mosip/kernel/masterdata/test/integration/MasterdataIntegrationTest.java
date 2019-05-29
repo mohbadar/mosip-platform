@@ -29,6 +29,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -5892,32 +5897,67 @@ public class MasterdataIntegrationTest {
 	//------------------------------------------------RegistrationMachine Get ------------------------------------------------
 	@Test
 	@WithUserDetails("test")
-	public void getRegistrationCenterMachineMappingSuccessTest() throws Exception {
-		LocalDateTime specificDate = LocalDateTime.of(2018, Month.JANUARY, 1, 10, 10, 30);
-		Timestamp validDateTime = Timestamp.valueOf(specificDate);
-		List<Object[]> objectMachineList = new ArrayList<>();
-		Object objects[] = { "10001","10001", "Machine 4", "NT894252578", "8C-16-45-5A-62-41", "192.168.0.259", "1001", "eng", true, validDateTime,
-				"superadmin", null,"110001",null };
-		objectMachineList.add(objects);
-		when(registrationCenterMachineRepository.findByRegCenterIdAndIsDeletedFalseOrIsDeletedIsNullMachine(Mockito.anyString()))
-				.thenReturn(objectMachineList);
-		mockMvc.perform(get("/registrationcentermachine/{regCenterId}", "10001")).andExpect(status().isOk());
+	public void getMachineRegistrationCenterMappingSuccessTest() throws Exception {
+		String page = "0";
+		String size = "2";
+		String orderBy = "id";
+		String direction ="ASC";
+		Machine machine = new Machine();
+		machine.setId("10001");
+		machine.setName("laptop");
+		machine.setMachineSpecId("10001");
+		machine.setIsActive(true);
+		machine.setIpAddress("102.0.0.0");
+		List<Machine> machinelist = new ArrayList<>();
+		machinelist.add(machine);
+		Page<Machine> pageEntity = new PageImpl<>(machinelist);
+	
+		when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageEntity);
+		mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
 	}
 
 	@Test
 	@WithUserDetails("test")
-	public void getRegistrationCenterMachineMappingNullResponseTest() throws Exception {
-		when(registrationCenterMachineRepository.findByRegCenterIdAndIsDeletedFalseOrIsDeletedIsNullMachine(Mockito.anyString())).thenReturn(null);
-		mockMvc.perform(get("/registrationcentermachine/{regCenterId}", "10001")).andExpect(status().isOk());
+	public void getMachineRegistrationCenterMappingNullResponseTest() throws Exception {
+		String page = "0";
+		String size = "2";
+		String orderBy = "id";
+		String direction ="ASC";
+		Machine machine = new Machine();
+		machine.setId("10001");
+		machine.setName("laptop");
+		machine.setMachineSpecId("10001");
+		machine.setIsActive(true);
+		machine.setIpAddress("102.0.0.0");
+		List<Machine> machinelist = new ArrayList<>();
+		machinelist.add(machine);
+		Page<Machine> pageEntity = new PageImpl<>(machinelist);
+		when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageEntity);
+		mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+	
 	}
 
 	@Test
 	@WithUserDetails("test")
-	public void getRegistrationCenterMachineMappingFetchExceptionTest() throws Exception {
-		when(registrationCenterMachineRepository.findByRegCenterIdAndIsDeletedFalseOrIsDeletedIsNullMachine(Mockito.anyString()))
-				.thenThrow(DataRetrievalFailureException.class);
-		mockMvc.perform(get("/registrationcentermachine/{regCenterId}", "10001"))
-				.andExpect(status().isInternalServerError());
+	public void getMachineRegistrationCenterMappingFetchExceptionTest() throws Exception {
+		String page = "0";
+		String size = "2";
+		String orderBy = "id";
+		String direction ="ASC";
+		/*Machine machine = new Machine();
+		machine.setId("10001");
+		machine.setName("laptop");
+		machine.setMachineSpecId("10001");
+		machine.setIsActive(true);
+		machine.setIpAddress("102.0.0.0");
+		List<Machine> machinelist = new ArrayList<>();
+		machinelist.add(machine);
+		Page<Machine> pageEntity = new PageImpl<>(machinelist);*/
+		when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isInternalServerError());
+		
 	}
+	
+	
 
 }
