@@ -5945,7 +5945,6 @@ public class MasterdataIntegrationTest {
 		}
 		//------------------------------------------------Get Devices mapped with given Registration center ------------------------------------------------	
 		@Test
-		//@WithUserDetails("test")
 		@WithUserDetails("zonal-admin") 
 		public void getDeviceRegistrationCenterMappingSuccessTest() throws Exception {
 			String page = "0";
@@ -5957,7 +5956,6 @@ public class MasterdataIntegrationTest {
 		}
 
 		@Test
-		//@WithUserDetails("test")
 		@WithUserDetails("zonal-admin") 
 		public void getDeviceRegistrationCenterMappingNullResponseTest() throws Exception {
 			String page = "0";
@@ -5970,7 +5968,6 @@ public class MasterdataIntegrationTest {
 		}
 
 		@Test
-		//@WithUserDetails("test")
 		@WithUserDetails("zonal-admin") 
 		public void getDeviceRegistrationCenterMappingFetchExceptionTest() throws Exception {
 			String page = "0";
