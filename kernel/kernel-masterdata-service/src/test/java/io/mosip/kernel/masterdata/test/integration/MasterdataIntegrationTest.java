@@ -5909,7 +5909,7 @@ public class MasterdataIntegrationTest {
 	
 	//------------------------------------------------Get Machines mapped with given Registration center ------------------------------------------------
 		@Test
-		@WithUserDetails("test")
+		@WithUserDetails("zonal-admin") 
 		public void getMachineRegistrationCenterMappingSuccessTest() throws Exception {
 			String page = "0";
 			String size = "2";
@@ -5920,7 +5920,7 @@ public class MasterdataIntegrationTest {
 		}
 
 		@Test
-		@WithUserDetails("test")
+		@WithUserDetails("zonal-admin") 
 		public void getMachineRegistrationCenterMappingNullResponseTest() throws Exception {
 			String page = "0";
 			String size = "2";
@@ -5932,8 +5932,7 @@ public class MasterdataIntegrationTest {
 		}
 
 		@Test
-		@WithUserDetails("test")
-		//@WithUserDetails("zonal-admin") 
+		@WithUserDetails("zonal-admin") 
 		public void getMachineRegistrationCenterMappingFetchExceptionTest() throws Exception {
 			String page = "0";
 			String size = "2";
