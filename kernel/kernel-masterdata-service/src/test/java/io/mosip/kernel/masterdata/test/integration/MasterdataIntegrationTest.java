@@ -3666,7 +3666,7 @@ public class MasterdataIntegrationTest {
 	// ---------------------------------------------
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void createDeviceTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.create");
@@ -3698,7 +3698,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateDeviceSuccessTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.update");
@@ -3726,7 +3726,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateDeviceNotFoundExceptionTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.create");
