@@ -5865,8 +5865,7 @@ public class MasterdataIntegrationTest {
 	public void getUserDetailHistoryByIdEmptyExceptionTest() throws Exception {
 		when(userDetailsRepository.getByUserIdAndTimestamp("11001", localDateTimeUTCFormat))
 				.thenReturn(new ArrayList<UserDetailsHistory>());
-		mockMvc.perform(
-				get("/users/110001/2018-01-01T10:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get("/users/110001/2018-01-01T10:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
 	}
 
@@ -5881,8 +5880,7 @@ public class MasterdataIntegrationTest {
 	@Test
 	@WithUserDetails("reg-processor")
 	public void getUserDetailHistoryByIdNotFoundExceptionTest() throws Exception {
-		when(userDetailsRepository.getByUserIdAndTimestamp(null, null))
-				.thenThrow(DataAccessException.class);
+		when(userDetailsRepository.getByUserIdAndTimestamp(null, null)).thenThrow(DataAccessException.class);
 		mockMvc.perform(get("/users/110006/2018-01-01T10:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
 	}
