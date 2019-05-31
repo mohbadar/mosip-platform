@@ -36,6 +36,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -2292,6 +2297,16 @@ public class MasterdataIntegrationTest {
 				.andExpect(jsonPath("$.response.registrationCenters[0].name", is("bangalore")));
 	}
 
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void getAllExistingRegistrationCenterTest() throws Exception {
+		Page<RegistrationCenter> page = new PageImpl<>(registrationCenters);
+		when(registrationCenterRepository
+				.findAll(PageRequest.of(0, 10, Sort.by(Direction.fromString("desc"), "createdDateTime"))))
+						.thenReturn(page);
+		mockMvc.perform(get("/registrationcenters/all")).andExpect(status().isOk());
+	}
+
 	// -----------------------------RegistrationCenterIntegrationTest----------------------------------
 
 	@Test
@@ -4074,8 +4089,7 @@ public class MasterdataIntegrationTest {
 		documentTypeDto.setName("POI");
 		requestDto.setRequest(documentTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(),
-				Mockito.any())).thenReturn(type);
+		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(), Mockito.any())).thenReturn(type);
 		when(documentTypeRepository.update(Mockito.any())).thenReturn(type);
 		mockMvc.perform(put("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
@@ -4116,8 +4130,7 @@ public class MasterdataIntegrationTest {
 		documentTypeDto.setName("POI");
 		requestDto.setRequest(documentTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(),
-				Mockito.any())).thenReturn(null);
+		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(), Mockito.any())).thenReturn(null);
 		mockMvc.perform(put("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 	}
@@ -4136,8 +4149,7 @@ public class MasterdataIntegrationTest {
 		documentTypeDto.setName("POI");
 		requestDto.setRequest(documentTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(),
-				Mockito.any())).thenReturn(type);
+		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(), Mockito.any())).thenReturn(type);
 		when(documentTypeRepository.update(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
 		mockMvc.perform(put("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
