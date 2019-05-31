@@ -2307,6 +2307,24 @@ public class MasterdataIntegrationTest {
 		mockMvc.perform(get("/registrationcenters/all")).andExpect(status().isOk());
 	}
 
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void getAllExistingRegistrationCenterNotFoundExceptionTest() throws Exception {
+		when(registrationCenterRepository
+				.findAll(PageRequest.of(0, 10, Sort.by(Direction.fromString("desc"), "createdDateTime"))))
+						.thenReturn(null);
+		mockMvc.perform(get("/registrationcenters/all")).andExpect(status().isOk());
+		
+	}
+	
+	@Test
+	@WithUserDetails("zonal-admin")
+	public void getAllExistingRegistrationCentersFetchExceptionTest() throws Exception {
+		when(registrationCenterRepository
+				.findAll(PageRequest.of(0, 10, Sort.by(Direction.fromString("desc"), "createdDateTime"))))
+						.thenThrow(new DataAccessLayerException("errorCode", "errorMessage", new RuntimeException()));
+		mockMvc.perform(get("/registrationcenters/all")).andExpect(status().isInternalServerError());
+	}
 	// -----------------------------RegistrationCenterIntegrationTest----------------------------------
 
 	@Test
