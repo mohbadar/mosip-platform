@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -3677,7 +3678,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void createDeviceExceptionTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.create");
@@ -3700,8 +3701,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(deviceDto);
 		String content = mapper.writeValueAsString(requestDto);
-		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(Mockito.anyString(),
-				Mockito.anyString())).thenReturn(device);
+		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(
+				Mockito.anyString(), Mockito.anyString())).thenReturn(device);
 		when(deviceHistoryRepository.create(Mockito.any())).thenReturn(deviceHistory);
 		Mockito.when(deviceRepository.update(Mockito.any())).thenReturn(device);
 		mockMvc.perform(MockMvcRequestBuilders.put("/devices").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -3728,8 +3729,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(deviceDto);
 		String content = mapper.writeValueAsString(requestDto);
-		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(Mockito.anyString(),
-				Mockito.anyString())).thenReturn(null);
+		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(
+				Mockito.anyString(), Mockito.anyString())).thenReturn(null);
 		when(deviceHistoryRepository.create(Mockito.any())).thenReturn(deviceHistory);
 		Mockito.when(deviceRepository.update(Mockito.any())).thenThrow(new DataNotFoundException("", ""));
 		mockMvc.perform(MockMvcRequestBuilders.put("/devices").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -4074,8 +4075,7 @@ public class MasterdataIntegrationTest {
 		documentTypeDto.setName("POI");
 		requestDto.setRequest(documentTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(),
-				Mockito.any())).thenReturn(type);
+		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(), Mockito.any())).thenReturn(type);
 		when(documentTypeRepository.update(Mockito.any())).thenReturn(type);
 		mockMvc.perform(put("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
@@ -4116,8 +4116,7 @@ public class MasterdataIntegrationTest {
 		documentTypeDto.setName("POI");
 		requestDto.setRequest(documentTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(),
-				Mockito.any())).thenReturn(null);
+		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(), Mockito.any())).thenReturn(null);
 		mockMvc.perform(put("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
 	}
@@ -4136,8 +4135,7 @@ public class MasterdataIntegrationTest {
 		documentTypeDto.setName("POI");
 		requestDto.setRequest(documentTypeDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(),
-				Mockito.any())).thenReturn(type);
+		when(documentTypeRepository.findByCodeAndLangCode(Mockito.any(), Mockito.any())).thenReturn(type);
 		when(documentTypeRepository.update(Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
 		mockMvc.perform(put("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
@@ -5848,15 +5846,17 @@ public class MasterdataIntegrationTest {
 	public void getUserDetailHistoryByIdTest() throws Exception {
 
 		when(userDetailsRepository.getByUserIdAndTimestamp(Mockito.anyString(), Mockito.any())).thenReturn(users);
-		mockMvc.perform(get("/users/110001/2018-01-01T10:10:30.956Z")).andExpect(status().isOk());
+		mockMvc.perform(
+				get("/users/110001/".concat(UTC_DATE_TIME_FORMAT_DATE_STRING)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 	@Test
 	@WithUserDetails("reg-processor")
-	public void getUserDetailHistoryByIdNotFoundExceptionTest() throws Exception {
-		when(userDetailsRepository.getByUserIdAndTimestamp("110001", localDateTimeUTCFormat)).thenReturn(null);
-		mockMvc.perform(
-				get("/users/110001/".concat(UTC_DATE_TIME_FORMAT_DATE_STRING)).contentType(MediaType.APPLICATION_JSON))
+	public void getUserDetailHistoryByDateExceptionTest() throws Exception {
+		when(userDetailsRepository.getByUserIdAndTimestamp("110001", localDateTimeUTCFormat))
+				.thenThrow(new RequestException("errorCode", "errorMessage", null));
+		mockMvc.perform(get("/users/110001/2018-01-0110:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
 	}
 
@@ -5866,16 +5866,24 @@ public class MasterdataIntegrationTest {
 		when(userDetailsRepository.getByUserIdAndTimestamp("11001", localDateTimeUTCFormat))
 				.thenReturn(new ArrayList<UserDetailsHistory>());
 		mockMvc.perform(
-				get("/users/110001/".concat(UTC_DATE_TIME_FORMAT_DATE_STRING)).contentType(MediaType.APPLICATION_JSON))
+				get("/users/110001/2018-01-01T10:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
 	}
 
 	@Test
-	@WithUserDetails("reg-admin")
+	@WithUserDetails("reg-processor")
 	public void getUserDetailHistoryByIdFetchExceptionTest() throws Exception {
 		when(userDetailsRepository.getByUserIdAndTimestamp(Mockito.anyString(), Mockito.any()))
 				.thenThrow(DataRetrievalFailureException.class);
-		mockMvc.perform(get("/users/110001/2018-01-01T10:10:30.956Z")).andExpect(status().isInternalServerError());
+		mockMvc.perform(get("/users/110001/")).andExpect(status().isNotFound());
 	}
 
+	@Test
+	@WithUserDetails("reg-processor")
+	public void getUserDetailHistoryByIdNotFoundExceptionTest() throws Exception {
+		when(userDetailsRepository.getByUserIdAndTimestamp(null, null))
+				.thenThrow(DataAccessException.class);
+		mockMvc.perform(get("/users/110006/2018-01-01T10:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn();
+	}
 }
