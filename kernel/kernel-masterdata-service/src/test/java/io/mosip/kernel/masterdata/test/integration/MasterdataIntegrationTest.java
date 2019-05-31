@@ -5331,7 +5331,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void createRegistrationCenterTest() throws Exception {
 		RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
 		short numberOfKiosks = 1;
@@ -5381,7 +5381,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateRegistrationCenterTest() throws Exception {
 		RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
 		short numberOfKiosks = 1;
@@ -5684,7 +5684,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void createRegistrationCenterTestInvalidLatLongFormatTest() throws Exception {
 		RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
 		short numberOfKiosks = 1;
@@ -5734,7 +5734,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateRegistrationCenterRequestExceptionTest() throws Exception {
 		RegistrationCenterHistory registrationCenterHistory = new RegistrationCenterHistory();
 		RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
@@ -5779,7 +5779,7 @@ public class MasterdataIntegrationTest {
 		registrationCenter.setWorkingHours("9");
 		requestDto.setRequest(registrationCenterDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(registrationCenterRepository.findByIdAndLangCode(Mockito.anyString(), Mockito.anyString()))
+		when(registrationCenterRepository.findByIdAndLangCodeAndIsDeletedTrue(Mockito.anyString(), Mockito.anyString()))
 				.thenReturn(registrationCenter);
 		when(registrationCenterRepository.update(registrationCenter)).thenReturn(registrationCenter);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
@@ -5788,7 +5788,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateRegistrationCenterDataAccessExceptionTest() throws Exception {
 		RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.idtype.create");
@@ -5813,7 +5813,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterDto.setWorkingHours("9");
 		requestDto.setRequest(registrationCenterDto);
 		String contentJson = mapper.writeValueAsString(requestDto);
-		when(registrationCenterRepository.findByIdAndLangCode(Mockito.any(), Mockito.any()))
+		when(registrationCenterRepository.findByIdAndLangCodeAndIsDeletedTrue(Mockito.any(), Mockito.any()))
 				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
 		mockMvc.perform(put("/registrationcenters").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isInternalServerError());
