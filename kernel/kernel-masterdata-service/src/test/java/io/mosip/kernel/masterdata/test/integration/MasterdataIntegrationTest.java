@@ -3661,7 +3661,7 @@ public class MasterdataIntegrationTest {
 	// ---------------------------------------------
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void createDeviceTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.create");
@@ -3693,14 +3693,14 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateDeviceSuccessTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.update");
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(deviceDto);
 		String content = mapper.writeValueAsString(requestDto);
-		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString(),
+		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(device);
 		when(deviceHistoryRepository.create(Mockito.any())).thenReturn(deviceHistory);
 		Mockito.when(deviceRepository.update(Mockito.any())).thenReturn(device);
@@ -3709,7 +3709,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateDeviceDatabaseConnectionExceptionTest() throws Exception {
 		when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(device);
@@ -3721,14 +3721,14 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateDeviceNotFoundExceptionTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.create");
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(deviceDto);
 		String content = mapper.writeValueAsString(requestDto);
-		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString(),
+		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(null);
 		when(deviceHistoryRepository.create(Mockito.any())).thenReturn(deviceHistory);
 		Mockito.when(deviceRepository.update(Mockito.any())).thenThrow(new DataNotFoundException("", ""));
