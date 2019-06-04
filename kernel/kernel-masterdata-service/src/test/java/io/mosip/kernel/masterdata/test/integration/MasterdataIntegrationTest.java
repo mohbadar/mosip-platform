@@ -1,4 +1,3 @@
-
 package io.mosip.kernel.masterdata.test.integration;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -38,9 +37,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -795,6 +796,7 @@ public class MasterdataIntegrationTest {
 
 	LocalDateTime specificDate;
 	String machineJson;
+	Page<Machine> pageEntity;
 
 	private void machineSetUp() {
 
@@ -817,6 +819,20 @@ public class MasterdataIntegrationTest {
 		MapperUtils.mapFieldValues(machine, machineHistory);
 		machineDto = new MachineDto();
 		MapperUtils.map(machine, machineDto);
+		
+		/*String page = "0";
+		String size = "2";
+		String orderBy = "id";
+		String direction ="ASC";*/
+		/*Machine machine = new Machine();
+		machine.setId("10001");
+		machine.setName("laptop");
+		machine.setMachineSpecId("10001");
+		machine.setIsActive(true);
+		machine.setIpAddress("102.0.0.0");
+		List<Machine> machinelist = new ArrayList<>();
+		machinelist.add(machine);*/
+		pageEntity = new PageImpl<>(machineList);
 
 	}
 
@@ -918,6 +934,7 @@ public class MasterdataIntegrationTest {
 	List<Device> deviceList;
 	List<Object[]> objectList;
 	DeviceHistory deviceHistory;
+	Page<Device> pageDeviceEntity;
 
 	private void deviceSetup() {
 
@@ -952,6 +969,16 @@ public class MasterdataIntegrationTest {
 		objectList.add(objects);
 
 		deviceHistory = new DeviceHistory();
+		
+		Device device = new Device();
+		device.setId("10001");
+		device.setName("laptop");
+		device.setDeviceSpecId("10001");
+		device.setIsActive(true);
+		device.setIpAddress("102.0.0.0");
+		List<Device> devicelist = new ArrayList<>();
+		devicelist.add(device);
+		pageDeviceEntity = new PageImpl<>(devicelist);
 
 	}
 
@@ -3450,7 +3477,8 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	//@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void createMachineExceptionTest() throws Exception {
 		RequestWrapper<MachineDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.Machine.create");
@@ -5907,5 +5935,77 @@ public class MasterdataIntegrationTest {
 				.thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/users/110001/2018-01-01T10:10:30.956Z")).andExpect(status().isInternalServerError());
 	}
+	
+	
+	//------------------------------------------------Get Machines mapped with given Registration center ------------------------------------------------
+		@Test
+		@WithUserDetails("zonal-admin") 
+		public void getMachineRegistrationCenterMappingSuccessTest() throws Exception {
+			String page = "0";
+			String size = "2";
+			String orderBy = "id";
+			String direction ="ASC";
+			when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageEntity);
+			mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+		}
 
+		@Test
+		@WithUserDetails("zonal-admin") 
+		public void getMachineRegistrationCenterMappingNullResponseTest() throws Exception {
+			String page = "0";
+			String size = "2";
+			String orderBy = "id";
+			String direction ="ASC";
+			when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(null);
+			mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+		
+		}
+
+		@Test
+		@WithUserDetails("zonal-admin") 
+		public void getMachineRegistrationCenterMappingFetchExceptionTest() throws Exception {
+			String page = "0";
+			String size = "2";
+			String orderBy = "id";
+			String direction ="ASC";
+			when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class);
+			mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isInternalServerError());
+			
+		}
+		//------------------------------------------------Get Devices mapped with given Registration center ------------------------------------------------	
+		@Test
+		@WithUserDetails("zonal-admin") 
+		public void getDeviceRegistrationCenterMappingSuccessTest() throws Exception {
+			String page = "0";
+			String size = "2";
+			String orderBy = "id";
+			String direction ="ASC";
+			when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageDeviceEntity);
+			mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+		}
+
+		@Test
+		@WithUserDetails("zonal-admin") 
+		public void getDeviceRegistrationCenterMappingNullResponseTest() throws Exception {
+			String page = "0";
+			String size = "2";
+			String orderBy = "id";
+			String direction ="ASC";
+			when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(null);
+			mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+		
+		}
+
+		@Test
+		@WithUserDetails("zonal-admin") 
+		public void getDeviceRegistrationCenterMappingFetchExceptionTest() throws Exception {
+			String page = "0";
+			String size = "2";
+			String orderBy = "id";
+			String direction ="ASC";
+			when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class);
+			mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isInternalServerError());
+			
+		}
+		
 }
