@@ -3420,7 +3420,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void createMachineTest() throws Exception {
 		RequestWrapper<MachineDto> requestDto;
 		requestDto = new RequestWrapper<>();
@@ -5932,15 +5932,6 @@ public class MasterdataIntegrationTest {
 
 	@Test
 	@WithUserDetails("reg-processor")
-	public void getUserDetailHistoryByIdNotFoundExceptionTest() throws Exception {
-		when(userDetailsRepository.getByUserIdAndTimestamp("110001", localDateTimeUTCFormat)).thenReturn(null);
-		mockMvc.perform(
-				get("/users/110001/".concat(UTC_DATE_TIME_FORMAT_DATE_STRING)).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andReturn();
-	}
-
-	@Test
-	@WithUserDetails("reg-processor")
 	public void getUserDetailHistoryByIdEmptyExceptionTest() throws Exception {
 		when(userDetailsRepository.getByUserIdAndTimestamp("11001", localDateTimeUTCFormat))
 				.thenReturn(new ArrayList<UserDetailsHistory>());
@@ -6035,3 +6026,5 @@ public class MasterdataIntegrationTest {
 		when(userDetailsRepository.getByUserIdAndTimestamp(null, null)).thenThrow(DataAccessException.class);
 		mockMvc.perform(get("/users/110006/2018-01-01T10:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
+		}
+		}
