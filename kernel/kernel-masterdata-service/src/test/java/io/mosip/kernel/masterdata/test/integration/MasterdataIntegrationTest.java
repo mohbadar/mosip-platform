@@ -5015,14 +5015,14 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateBadWordSuccess() throws Exception {
 		String input = "{\n" + "  \"id\": \"string\",\n" + "  \"metadata\": {},\n" + "  \"request\": {\n"
 				+ "    \"description\": \"bad word description\",\n" + "    \"isActive\": false,\n"
-				+ "    \"langCode\": \"eng\",\n" + "    \"word\": \"badword\"\n" + "  },\n"
-				+ "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n" + "  \"version\": \"string\"\n" + "}";
-		when(wordsRepository.findByWordAndLangCode(anyString(), anyString())).thenReturn(words.get(0));
-		when(wordsRepository.update(any())).thenReturn(words.get(0));
+				+ "    \"langCode\": \"eng\",\n" + "    \"oldWord\": \"badword\",\n"
+				+ "    \"word\": \"badwordUpdate\"\n" + "  },\n" + "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n"
+				+ "  \"version\": \"string\"\n" + "}";
+		when(wordsRepository.createQueryUpdateOrDelete(Mockito.anyString(), Mockito.any())).thenReturn(1);
 		mockMvc.perform(put("/blacklistedwords").contentType(MediaType.APPLICATION_JSON).content(input))
 				.andExpect(status().isOk());
 	}
@@ -5054,14 +5054,14 @@ public class MasterdataIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateBadWordFailure() throws Exception {
 		String input = "{\n" + "  \"id\": \"string\",\n" + "  \"metadata\": {},\n" + "  \"request\": {\n"
 				+ "    \"description\": \"bad word description\",\n" + "    \"isActive\": false,\n"
-				+ "    \"langCode\": \"eng\",\n" + "    \"word\": \"badword\"\n" + "  },\n"
-				+ "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n" + "  \"version\": \"string\"\n" + "}";
-		when(wordsRepository.findByWordAndLangCode(anyString(), anyString())).thenReturn(words.get(0));
-		when(wordsRepository.update(any())).thenThrow(DataRetrievalFailureException.class,
+				+ "    \"langCode\": \"eng\",\n" + "    \"oldWord\": \"badword\",\n"
+				+ "    \"word\": \"badwordUpdate\"\n" + "  },\n" + "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n"
+				+ "  \"version\": \"string\"\n" + "}";
+		when(wordsRepository.createQueryUpdateOrDelete(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class,
 				DataAccessLayerException.class);
 		mockMvc.perform(put("/blacklistedwords").contentType(MediaType.APPLICATION_JSON).content(input))
 				.andExpect(status().isInternalServerError());
