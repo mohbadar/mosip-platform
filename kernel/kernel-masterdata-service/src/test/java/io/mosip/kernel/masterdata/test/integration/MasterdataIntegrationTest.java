@@ -35,14 +35,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -797,7 +794,6 @@ public class MasterdataIntegrationTest {
 
 	LocalDateTime specificDate;
 	String machineJson;
-	Page<Machine> pageEntity;
 
 	private void machineSetUp() {
 
@@ -820,20 +816,6 @@ public class MasterdataIntegrationTest {
 		MapperUtils.mapFieldValues(machine, machineHistory);
 		machineDto = new MachineDto();
 		MapperUtils.map(machine, machineDto);
-		
-		/*String page = "0";
-		String size = "2";
-		String orderBy = "id";
-		String direction ="ASC";*/
-		/*Machine machine = new Machine();
-		machine.setId("10001");
-		machine.setName("laptop");
-		machine.setMachineSpecId("10001");
-		machine.setIsActive(true);
-		machine.setIpAddress("102.0.0.0");
-		List<Machine> machinelist = new ArrayList<>();
-		machinelist.add(machine);*/
-		pageEntity = new PageImpl<>(machineList);
 
 	}
 
@@ -935,7 +917,6 @@ public class MasterdataIntegrationTest {
 	List<Device> deviceList;
 	List<Object[]> objectList;
 	DeviceHistory deviceHistory;
-	Page<Device> pageDeviceEntity;
 
 	private void deviceSetup() {
 
@@ -970,16 +951,6 @@ public class MasterdataIntegrationTest {
 		objectList.add(objects);
 
 		deviceHistory = new DeviceHistory();
-		
-		Device device = new Device();
-		device.setId("10001");
-		device.setName("laptop");
-		device.setDeviceSpecId("10001");
-		device.setIsActive(true);
-		device.setIpAddress("102.0.0.0");
-		List<Device> devicelist = new ArrayList<>();
-		devicelist.add(device);
-		pageDeviceEntity = new PageImpl<>(devicelist);
 
 	}
 
@@ -3437,7 +3408,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("zonal-admin")
+	@WithUserDetails("test")
 	public void createMachineLanguageCodeValidatorTest() throws Exception {
 		RequestWrapper<MachineDto> requestDto;
 		requestDto = new RequestWrapper<>();
@@ -3455,7 +3426,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("zonal-admin")
+	@WithUserDetails("test")
 	public void createMachineTestInvalid() throws Exception {
 		RequestWrapper<MachineDto> requestDto;
 		requestDto = new RequestWrapper<>();
@@ -3478,8 +3449,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	//@WithUserDetails("test")
-	@WithUserDetails("zonal-admin")
+	@WithUserDetails("test")
 	public void createMachineExceptionTest() throws Exception {
 		RequestWrapper<MachineDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.Machine.create");
@@ -3504,8 +3474,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineDto);
 		String content = mapper.writeValueAsString(requestDto);
 
-		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNullWithoutActiveStatusCheck(
-				Mockito.any(), Mockito.anyString())).thenReturn(machine);
+		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
+				Mockito.anyString())).thenReturn(machine);
 		Mockito.when(machineRepository.update(Mockito.any())).thenReturn(machine);
 		when(machineHistoryRepository.create(Mockito.any())).thenReturn(machineHistory);
 		mockMvc.perform(
@@ -3514,7 +3484,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("zonal-admin")
+	@WithUserDetails("test")
 	public void updateMachineLanguageCodeValidatorTest() throws Exception {
 
 		RequestWrapper<MachineDto> requestDto = new RequestWrapper<>();
@@ -3524,8 +3494,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setRequest(machineDto);
 		String content = mapper.writeValueAsString(requestDto);
 
-		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNullWithoutActiveStatusCheck(
-				Mockito.any(), Mockito.any())).thenReturn(machine);
+		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
+				Mockito.any())).thenReturn(machine);
 		Mockito.when(machineRepository.update(Mockito.any())).thenReturn(machine);
 		when(machineHistoryRepository.create(Mockito.any())).thenReturn(machineHistory);
 		mockMvc.perform(
@@ -3542,8 +3512,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineDto);
 		String content = mapper.writeValueAsString(requestDto);
-		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNullWithoutActiveStatusCheck(
-				Mockito.any(), Mockito.any())).thenReturn(null);
+		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
+				Mockito.any())).thenReturn(null);
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.put("/machines").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -3551,7 +3521,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("zonal-admin")
+	@WithUserDetails("test")
 	public void updateMachineDatabaseConnectionExceptionTest() throws Exception {
 
 		RequestWrapper<MachineDto> requestDto = new RequestWrapper<>();
@@ -3559,8 +3529,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(machineDto);
 		String content = mapper.writeValueAsString(requestDto);
-		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNullWithoutActiveStatusCheck(
-				Mockito.any(), Mockito.any())).thenThrow(DataAccessLayerException.class);
+		when(machineRepository.findMachineByIdAndLangCodeAndIsDeletedFalseorIsDeletedIsNull(Mockito.any(),
+				Mockito.any())).thenThrow(DataAccessLayerException.class);
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.put("/machines").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -3739,7 +3709,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("zonal-admin")
+	@WithUserDetails("test")
 	public void createDeviceExceptionTest() throws Exception {
 		RequestWrapper<DeviceDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.device.create");
@@ -3762,8 +3732,8 @@ public class MasterdataIntegrationTest {
 		requestDto.setVersion("1.0.0");
 		requestDto.setRequest(deviceDto);
 		String content = mapper.writeValueAsString(requestDto);
-		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNullNoIsActive(
-				Mockito.anyString(), Mockito.anyString())).thenReturn(device);
+		Mockito.when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString(),
+				Mockito.anyString())).thenReturn(device);
 		when(deviceHistoryRepository.create(Mockito.any())).thenReturn(deviceHistory);
 		Mockito.when(deviceRepository.update(Mockito.any())).thenReturn(device);
 		mockMvc.perform(MockMvcRequestBuilders.put("/devices").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -3771,7 +3741,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("zonal-admin")
+	@WithUserDetails("test")
 	public void updateDeviceDatabaseConnectionExceptionTest() throws Exception {
 		when(deviceRepository.findByIdAndLangCodeAndIsDeletedFalseOrIsDeletedIsNull(Mockito.anyString(),
 				Mockito.anyString())).thenReturn(device);
@@ -3890,7 +3860,7 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("central-admin")
 	public void addBlackListedWordTest() throws Exception {
 		RequestWrapper<BlacklistedWordsDto> requestDto = new RequestWrapper<>();
 		requestDto.setId("mosip.idtype.create");
@@ -4120,26 +4090,6 @@ public class MasterdataIntegrationTest {
 		String contentJson = mapper.writeValueAsString(requestDto);
 		mockMvc.perform(post("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
 				.andExpect(status().isOk());
-	}
-	
-	@Test
-	@WithUserDetails("test")
-	public void addDocumentTypeAccessDeniedTest() throws Exception {
-		RequestWrapper<DocumentTypeDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.idtype.create");
-		requestDto.setVersion("1.0");
-		DocumentTypeDto documentTypeDto = new DocumentTypeDto();
-		documentTypeDto.setCode("D001");
-		documentTypeDto.setDescription("Proof Of Identity");
-		documentTypeDto.setIsActive(true);
-		documentTypeDto.setLangCode("eng");
-		documentTypeDto.setName("POI");
-		requestDto.setRequest(documentTypeDto);
-		String contentJson = mapper.writeValueAsString(requestDto);
-
-		when(documentTypeRepository.create(Mockito.any())).thenReturn(type);
-		mockMvc.perform(post("/documenttypes").contentType(MediaType.APPLICATION_JSON).content(contentJson))
-				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
@@ -5064,14 +5014,14 @@ public class MasterdataIntegrationTest {
 	}
 
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("central-admin")
 	public void updateBadWordSuccess() throws Exception {
 		String input = "{\n" + "  \"id\": \"string\",\n" + "  \"metadata\": {},\n" + "  \"request\": {\n"
 				+ "    \"description\": \"bad word description\",\n" + "    \"isActive\": false,\n"
-				+ "    \"langCode\": \"eng\",\n" + "    \"word\": \"badword\"\n" + "  },\n"
-				+ "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n" + "  \"version\": \"string\"\n" + "}";
-		when(wordsRepository.findByWordAndLangCode(anyString(), anyString())).thenReturn(words.get(0));
-		when(wordsRepository.update(any())).thenReturn(words.get(0));
+				+ "    \"langCode\": \"eng\",\n" + "    \"oldWord\": \"badword\",\n"
+				+ "    \"word\": \"badwordUpdate\"\n" + "  },\n" + "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n"
+				+ "  \"version\": \"string\"\n" + "}";
+		when(wordsRepository.createQueryUpdateOrDelete(Mockito.anyString(), Mockito.any())).thenReturn(1);
 		mockMvc.perform(put("/blacklistedwords").contentType(MediaType.APPLICATION_JSON).content(input))
 				.andExpect(status().isOk());
 	}
@@ -5103,14 +5053,14 @@ public class MasterdataIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void updateBadWordFailure() throws Exception {
 		String input = "{\n" + "  \"id\": \"string\",\n" + "  \"metadata\": {},\n" + "  \"request\": {\n"
 				+ "    \"description\": \"bad word description\",\n" + "    \"isActive\": false,\n"
-				+ "    \"langCode\": \"eng\",\n" + "    \"word\": \"badword\"\n" + "  },\n"
-				+ "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n" + "  \"version\": \"string\"\n" + "}";
-		when(wordsRepository.findByWordAndLangCode(anyString(), anyString())).thenReturn(words.get(0));
-		when(wordsRepository.update(any())).thenThrow(DataRetrievalFailureException.class,
+				+ "    \"langCode\": \"eng\",\n" + "    \"oldWord\": \"badword\",\n"
+				+ "    \"word\": \"badwordUpdate\"\n" + "  },\n" + "  \"requesttime\": \"2018-12-24T07:21:42.232Z\",\n"
+				+ "  \"version\": \"string\"\n" + "}";
+		when(wordsRepository.createQueryUpdateOrDelete(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class,
 				DataAccessLayerException.class);
 		mockMvc.perform(put("/blacklistedwords").contentType(MediaType.APPLICATION_JSON).content(input))
 				.andExpect(status().isInternalServerError());
@@ -5932,6 +5882,15 @@ public class MasterdataIntegrationTest {
 
 	@Test
 	@WithUserDetails("reg-processor")
+	public void getUserDetailHistoryByIdNotFoundExceptionTest() throws Exception {
+		when(userDetailsRepository.getByUserIdAndTimestamp("110001", localDateTimeUTCFormat)).thenReturn(null);
+		mockMvc.perform(
+				get("/users/110001/".concat(UTC_DATE_TIME_FORMAT_DATE_STRING)).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn();
+	}
+
+	@Test
+	@WithUserDetails("reg-processor")
 	public void getUserDetailHistoryByIdEmptyExceptionTest() throws Exception {
 		when(userDetailsRepository.getByUserIdAndTimestamp("11001", localDateTimeUTCFormat))
 				.thenReturn(new ArrayList<UserDetailsHistory>());
@@ -5947,84 +5906,5 @@ public class MasterdataIntegrationTest {
 				.thenThrow(DataRetrievalFailureException.class);
 		mockMvc.perform(get("/users/110001/2018-01-01T10:10:30.956Z")).andExpect(status().isInternalServerError());
 	}
-	
-	
-	//------------------------------------------------Get Machines mapped with given Registration center ------------------------------------------------
-		@Test
-		@WithUserDetails("zonal-admin") 
-		public void getMachineRegistrationCenterMappingSuccessTest() throws Exception {
-			String page = "0";
-			String size = "2";
-			String orderBy = "id";
-			String direction ="ASC";
-			when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageEntity);
-			mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
-		}
 
-		@Test
-		@WithUserDetails("zonal-admin") 
-		public void getMachineRegistrationCenterMappingNullResponseTest() throws Exception {
-			String page = "0";
-			String size = "2";
-			String orderBy = "id";
-			String direction ="ASC";
-			when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(null);
-			mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
-		
-		}
-
-		@Test
-		@WithUserDetails("zonal-admin") 
-		public void getMachineRegistrationCenterMappingFetchExceptionTest() throws Exception {
-			String page = "0";
-			String size = "2";
-			String orderBy = "id";
-			String direction ="ASC";
-			when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class);
-			mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isInternalServerError());
-			
-		}
-		//------------------------------------------------Get Devices mapped with given Registration center ------------------------------------------------	
-		@Test
-		@WithUserDetails("zonal-admin") 
-		public void getDeviceRegistrationCenterMappingSuccessTest() throws Exception {
-			String page = "0";
-			String size = "2";
-			String orderBy = "id";
-			String direction ="ASC";
-			when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageDeviceEntity);
-			mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
-		}
-
-		@Test
-		@WithUserDetails("zonal-admin") 
-		public void getDeviceRegistrationCenterMappingNullResponseTest() throws Exception {
-			String page = "0";
-			String size = "2";
-			String orderBy = "id";
-			String direction ="ASC";
-			when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(null);
-			mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
-		
-		}
-
-		@Test
-		@WithUserDetails("zonal-admin") 
-		public void getDeviceRegistrationCenterMappingFetchExceptionTest() throws Exception {
-			String page = "0";
-			String size = "2";
-			String orderBy = "id";
-			String direction ="ASC";
-			when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class);
-			mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isInternalServerError());
-			
-		}
-		
-		@Test
-		@WithUserDetails("reg-processor")
-		public void getUserDetailHistoryByIdNotFoundExceptionTest() throws Exception {
-		when(userDetailsRepository.getByUserIdAndTimestamp(null, null)).thenThrow(DataAccessException.class);
-		mockMvc.perform(get("/users/110006/2018-01-01T10:10:30.956Z").contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andReturn();
-		}
-		}
+}
