@@ -3534,7 +3534,7 @@ public class MasterdataIntegrationTest {
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.put("/machines").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().isInternalServerError());
+				.andExpect(status().is2xxSuccessful());
 
 	}
 
