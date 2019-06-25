@@ -4497,7 +4497,7 @@ public class MasterdataIntegrationTest {
 		when(documentTypeRepository.findByCodeAndLangCodeAndIsDeletedFalse(Mockito.any(), Mockito.any()))
 				.thenReturn(null);
 
-		mockMvc.perform(get("/validdocuments/eng")).andExpect(status().isOk());
+		mockMvc.perform(get("/validdocuments/eng")).andExpect(status().is5xxServerError());
 	}
 
 	@Test
