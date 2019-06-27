@@ -1088,7 +1088,7 @@ public class MasterdataIntegrationTest {
 		LocalTime perKioskProcessTime = LocalTime.of(1, 10, 10, 30);
 
 		regRequest = new RegistarionCenterReqDto<>();
-		Set<RegistrationCenterReqAdmDto> requestSet = new HashSet<>();
+		List<RegistrationCenterReqAdmDto> requestSet = new ArrayList<>();
 		regRequest.setId("mosip.idtype.create");
 		regRequest.setVersion("1.0");
 		// 1st obj
@@ -1231,7 +1231,7 @@ public class MasterdataIntegrationTest {
 		LocalTime perKioskProcessTime = LocalTime.of(1, 10, 10, 30);
 
 		updRegRequest = new RegistarionCenterReqDto<>();
-		Set<RegistrationCenterPutReqAdmDto> updRequestSet = new HashSet<>();
+		List<RegistrationCenterPutReqAdmDto> updRequestSet = new ArrayList<>();
 		updRegRequest.setId("mosip.idtype.create");
 		updRegRequest.setVersion("1.0");
 		// 1st obj
