@@ -6030,92 +6030,6 @@ public class MasterdataIntegrationTest {
 				.andExpect(status().isOk());
 	}
 
-	@Test
-	@WithUserDetails("zonal-admin")
-	public void updateRegistrationCenterRequestExceptionTest() throws Exception {
-		RegistrationCenterHistory registrationCenterHistory = new RegistrationCenterHistory();
-		RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
-		short numberOfKiosks = 1;
-		requestDto.setId("mosip.idtype.create");
-		requestDto.setVersion("1.0");
-		RegistrationCenterDto registrationCenterDto = new RegistrationCenterDto();
-		registrationCenterDto.setName("TEST CENTER");
-		registrationCenterDto.setAddressLine1("Address Line 1");
-		registrationCenterDto.setAddressLine2("Address Line 2");
-		registrationCenterDto.setAddressLine3("Address Line 3");
-		registrationCenterDto.setCenterTypeCode("REG01");
-		registrationCenterDto.setContactPerson("Test");
-		registrationCenterDto.setContactPhone("9999999999");
-		registrationCenterDto.setHolidayLocationCode("HLC01");
-		registrationCenterDto.setId("676");
-		registrationCenterDto.setIsActive(true);
-		registrationCenterDto.setLangCode("eng");
-		registrationCenterDto.setLatitude("INVALID");
-		registrationCenterDto.setLocationCode("INVALID");
-		registrationCenterDto.setLongitude("77.70168");
-		registrationCenterDto.setNumberOfKiosks((short) 1);
-		registrationCenterDto.setTimeZone("UTC");
-		registrationCenterDto.setWorkingHours("9");
-		RegistrationCenter registrationCenter = new RegistrationCenter();
-		registrationCenter.setName("TEST CENTER");
-		registrationCenter.setAddressLine1("Address Line 1");
-		registrationCenter.setAddressLine2("Address Line 2");
-		registrationCenter.setAddressLine3("Address Line 3");
-		registrationCenter.setCenterTypeCode("REG01");
-		registrationCenter.setContactPerson("Test");
-		registrationCenter.setContactPhone("9999999999");
-		registrationCenter.setHolidayLocationCode("HLC01");
-		registrationCenter.setId("676");
-		registrationCenter.setIsActive(true);
-		registrationCenter.setLangCode("eng");
-		registrationCenter.setLatitude("12.9646818");
-		registrationCenter.setLocationCode("LOC01");
-		registrationCenter.setLongitude("77.70168");
-		registrationCenter.setNumberOfKiosks(numberOfKiosks);
-		registrationCenter.setTimeZone("UTC");
-		registrationCenter.setWorkingHours("9");
-		requestDto.setRequest(registrationCenterDto);
-		String contentJson = mapper.writeValueAsString(requestDto);
-		when(registrationCenterRepository.findByIdAndLangCodeAndIsDeletedTrue(Mockito.anyString(), Mockito.anyString()))
-				.thenReturn(registrationCenter);
-		when(registrationCenterRepository.update(registrationCenter)).thenReturn(registrationCenter);
-		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
-		mockMvc.perform(put("/registrationcenters").contentType(MediaType.APPLICATION_JSON).content(contentJson))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	@WithUserDetails("zonal-admin")
-	public void updateRegistrationCenterDataAccessExceptionTest() throws Exception {
-		RequestWrapper<RegistrationCenterDto> requestDto = new RequestWrapper<>();
-		requestDto.setId("mosip.idtype.create");
-		requestDto.setVersion("1.0");
-		RegistrationCenterDto registrationCenterDto = new RegistrationCenterDto();
-		registrationCenterDto.setName("TEST CENTER");
-		registrationCenterDto.setAddressLine1("Address Line 1");
-		registrationCenterDto.setAddressLine2("Address Line 2");
-		registrationCenterDto.setAddressLine3("Address Line 3");
-		registrationCenterDto.setCenterTypeCode("REG01");
-		registrationCenterDto.setContactPerson("Test");
-		registrationCenterDto.setContactPhone("9999999999");
-		registrationCenterDto.setHolidayLocationCode("HLC01");
-		registrationCenterDto.setId("676");
-		registrationCenterDto.setIsActive(true);
-		registrationCenterDto.setLangCode("eng");
-		registrationCenterDto.setLatitude("12.9646818");
-		registrationCenterDto.setLocationCode("LOC");
-		registrationCenterDto.setLongitude("77.70168");
-		registrationCenterDto.setNumberOfKiosks((short) 1);
-		registrationCenterDto.setTimeZone("UTC");
-		registrationCenterDto.setWorkingHours("9");
-		requestDto.setRequest(registrationCenterDto);
-		String contentJson = mapper.writeValueAsString(requestDto);
-		when(registrationCenterRepository.findByIdAndLangCodeAndIsDeletedTrue(Mockito.any(), Mockito.any()))
-				.thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
-		mockMvc.perform(put("/registrationcenters").contentType(MediaType.APPLICATION_JSON).content(contentJson))
-				.andExpect(status().isInternalServerError());
-	}
-
 	// -----------------------------------genderNameValidationTest-------------------//
 
 	@WithUserDetails("reg-processor")
@@ -6214,7 +6128,6 @@ public class MasterdataIntegrationTest {
 	@WithUserDetails("zonal-admin")
 	public void createRegistrationCenterAdminTest() throws Exception {
 		String content = objectMapper.writeValueAsString(regRequest);
-		//when(registrationCenterIdGenerator.generateRegistrationCenterId()).thenReturn("10000");
 		when(registrationCenterRepository.create(Mockito.any())).thenReturn(registrationCenter1);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
 		mockMvc.perform(post("/registrationcenters").contentType(MediaType.APPLICATION_JSON).content(content))
