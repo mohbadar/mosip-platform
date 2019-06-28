@@ -57,6 +57,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.kernel.core.dataaccess.exception.DataAccessLayerException;
 import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.idgenerator.spi.RegistrationCenterIdGenerator;
 import io.mosip.kernel.masterdata.dto.BiometricAttributeDto;
 import io.mosip.kernel.masterdata.dto.BlacklistedWordsDto;
 import io.mosip.kernel.masterdata.dto.DeviceDto;
@@ -1101,7 +1102,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterDto1.setContactPerson("Test");
 		registrationCenterDto1.setContactPhone("9999999999");
 		registrationCenterDto1.setHolidayLocationCode("HLC01");
-		registrationCenterDto1.setId("676");
+		//registrationCenterDto1.setId("676");
 		registrationCenterDto1.setLangCode("eng");
 		registrationCenterDto1.setLatitude("12.9646818");
 		registrationCenterDto1.setLocationCode("10190");
@@ -1125,7 +1126,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterDto2.setContactPerson("Test");
 		registrationCenterDto2.setContactPhone("9999999999");
 		registrationCenterDto2.setHolidayLocationCode("HLC01");
-		registrationCenterDto2.setId("676");
+		//registrationCenterDto2.setId("676");
 		registrationCenterDto2.setLangCode("ara");
 		registrationCenterDto2.setLatitude("12.9646818");
 		registrationCenterDto2.setLocationCode("10190");
@@ -1149,7 +1150,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterDto3.setContactPerson("Test");
 		registrationCenterDto3.setContactPhone("9999999999");
 		registrationCenterDto3.setHolidayLocationCode("HLC01");
-		registrationCenterDto3.setId("676");
+		//registrationCenterDto3.setId("676");
 		registrationCenterDto3.setLangCode("fra");
 		registrationCenterDto3.setLatitude("12.9646818");
 		registrationCenterDto3.setLocationCode("10190");
@@ -1176,7 +1177,7 @@ public class MasterdataIntegrationTest {
 		registrationCenter1.setContactPerson("Test");
 		registrationCenter1.setContactPhone("9999999999");
 		registrationCenter1.setHolidayLocationCode("HLC01");
-		registrationCenter1.setId("676");
+		registrationCenter1.setId("10000");
 		registrationCenter1.setIsActive(false);
 		registrationCenter1.setLangCode("eng");
 		registrationCenter1.setLatitude("12.9646818");
@@ -1202,7 +1203,7 @@ public class MasterdataIntegrationTest {
 		registrationCenterHistory.setContactPerson("Test");
 		registrationCenterHistory.setContactPhone("9999999999");
 		registrationCenterHistory.setHolidayLocationCode("HLC01");
-		registrationCenterHistory.setId("676");
+		registrationCenterHistory.setId("10000");
 		registrationCenterHistory.setIsActive(false);
 		registrationCenterHistory.setLangCode("fra");
 		registrationCenterHistory.setLatitude("12.9646818");
@@ -6206,10 +6207,14 @@ public class MasterdataIntegrationTest {
 
 	// -----------------------createRegistrationCenter TestCase------------------------
 	
+	@Autowired
+	RegistrationCenterIdGenerator<String> registrationCenterIdGenerator;
+	
 	@Test
 	@WithUserDetails("zonal-admin")
 	public void createRegistrationCenterAdminTest() throws Exception {
 		String content = objectMapper.writeValueAsString(regRequest);
+		//when(registrationCenterIdGenerator.generateRegistrationCenterId()).thenReturn("10000");
 		when(registrationCenterRepository.create(Mockito.any())).thenReturn(registrationCenter1);
 		when(repositoryCenterHistoryRepository.create(Mockito.any())).thenReturn(registrationCenterHistory);
 		mockMvc.perform(post("/registrationcenters").contentType(MediaType.APPLICATION_JSON).content(content))
@@ -6220,6 +6225,7 @@ public class MasterdataIntegrationTest {
 	@WithUserDetails("zonal-admin")
 	public void createRegistrationCenterAdminDataExcpTest() throws Exception {
 		String content = objectMapper.writeValueAsString(regRequest);
+		//when(registrationCenterIdGenerator.generateRegistrationCenterId()).thenReturn("10000");
 		when(registrationCenterRepository.create(Mockito.any())).thenThrow(new DataAccessLayerException("", "cannot execute statement", null));
 		mockMvc.perform(post("/registrationcenters").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
