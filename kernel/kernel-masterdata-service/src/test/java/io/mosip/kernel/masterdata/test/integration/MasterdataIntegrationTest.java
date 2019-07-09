@@ -927,6 +927,7 @@ public class MasterdataIntegrationTest {
 	List<Device> deviceList;
 	List<Object[]> objectList;
 	DeviceHistory deviceHistory;
+	Page<Device> pageDeviceEntity;
 
 	private void deviceSetup() {
 
@@ -954,6 +955,16 @@ public class MasterdataIntegrationTest {
 		device.setDeviceSpecId("234");
 		device.setValidityDateTime(specificDate);
 		deviceList.add(device);
+		
+		Device device = new Device();
+		device.setId("10001");
+		device.setName("laptop");
+		device.setDeviceSpecId("10001");
+		device.setIsActive(true);
+		device.setIpAddress("102.0.0.0");
+		List<Device> devicelist = new ArrayList<>();
+		devicelist.add(device);
+		pageDeviceEntity = new PageImpl<>(devicelist);
 
 		objectList = new ArrayList<>();
 		Object objects[] = { "1001", "Laptop", "129.0.0.0", "123", "129.0.0.0", "1212", "eng", true, validDateTime,
@@ -6165,5 +6176,87 @@ public class MasterdataIntegrationTest {
 		mockMvc.perform(put("/registrationcenters").contentType(MediaType.APPLICATION_JSON).content(content))
 				.andExpect(status().isInternalServerError());
 	}
+	
+	//------------------------------------------------RegistrationMachine Get ------------------------------------------------
+	@Test
+	@WithUserDetails("test")
+	public void getMachineRegistrationCenterMappingSuccessTest() throws Exception {
+		String page = "0";
+		String size = "2";
+		String orderBy = "id";
+		String direction ="ASC";
+		Machine machine = new Machine();
+		machine.setId("10001");
+		machine.setName("laptop");
+		machine.setMachineSpecId("10001");
+		machine.setIsActive(true);
+		machine.setIpAddress("102.0.0.0");
+		List<Machine> machinelist = new ArrayList<>();
+		machinelist.add(machine);
+		Page<Machine> pageEntity = new PageImpl<>(machinelist);
+
+		when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageEntity);
+		mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+	}
+	
+	@Test
+	@WithUserDetails("test")
+	public void getMachineRegistrationCenterMappingNullResponseTest() throws Exception {
+		String page = "0";
+		String size = "2";
+		String orderBy = "id";
+		String direction ="ASC";
+		when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(null);
+		mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+
+	}
+		
+	@Test
+	@WithUserDetails("test")
+	public void getMachineRegistrationCenterMappingFetchExceptionTest() throws Exception {
+		String page = "0";
+		String size = "2";
+		String orderBy = "id";
+		String direction ="ASC";
+		when(machineRepository.findMachineByRegCenterId(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class);
+		mockMvc.perform(get("/machines/mappedmachines/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isInternalServerError());
+
+	}
+	
+	//------------------------------------------------Get Devices mapped with given Registration center ------------------------------------------------	
+			@Test
+			@WithUserDetails("test")
+			public void getDeviceRegistrationCenterMappingSuccessTest() throws Exception {
+				String page = "0";
+				String size = "2";
+				String orderBy = "id";
+				String direction ="ASC";
+				when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(pageDeviceEntity);
+				mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+			}
+
+			@Test
+			@WithUserDetails("test")
+			public void getDeviceRegistrationCenterMappingNullResponseTest() throws Exception {
+				String page = "0";
+				String size = "2";
+				String orderBy = "id";
+				String direction ="ASC";
+				when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenReturn(null);
+				mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isOk());
+
+			}
+
+			@Test
+			@WithUserDetails("test")
+			public void getDeviceRegistrationCenterMappingFetchExceptionTest() throws Exception {
+				String page = "0";
+				String size = "2";
+				String orderBy = "id";
+				String direction ="ASC";
+				when(deviceRepository.findDeviceByRegCenterId(Mockito.anyString(), Mockito.any())).thenThrow(DataRetrievalFailureException.class);
+				mockMvc.perform(get("/devices/mappeddevices/{regCenterId}", "10001").param("page",page).param("size",size).param("orderBy",orderBy).param("direction",direction)).andExpect(status().isInternalServerError());
+
+			}
 
 }
