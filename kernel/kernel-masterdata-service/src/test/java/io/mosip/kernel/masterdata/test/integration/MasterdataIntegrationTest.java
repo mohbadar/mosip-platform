@@ -3843,7 +3843,7 @@ public class MasterdataIntegrationTest {
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.put("/machines").contentType(MediaType.APPLICATION_JSON).content(content))
-				.andExpect(status().is2xxSuccessful());
+				.andExpect(status().is5xxServerError());
 
 	}
 
@@ -6179,7 +6179,7 @@ public class MasterdataIntegrationTest {
 	
 	//------------------------------------------------RegistrationMachine Get ------------------------------------------------
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void getMachineRegistrationCenterMappingSuccessTest() throws Exception {
 		String page = "0";
 		String size = "2";
@@ -6200,7 +6200,7 @@ public class MasterdataIntegrationTest {
 	}
 	
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void getMachineRegistrationCenterMappingNullResponseTest() throws Exception {
 		String page = "0";
 		String size = "2";
@@ -6212,7 +6212,7 @@ public class MasterdataIntegrationTest {
 	}
 		
 	@Test
-	@WithUserDetails("test")
+	@WithUserDetails("zonal-admin")
 	public void getMachineRegistrationCenterMappingFetchExceptionTest() throws Exception {
 		String page = "0";
 		String size = "2";
