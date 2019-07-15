@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="0,0" last-zoom="0.25"
+<dbmodel pgmodeler-ver="0.9.2-alpha" last-position="323,123" last-zoom="0.35"
 	 default-schema="public" default-owner="postgres">
 <role name="sysadmin"
       superuser="true"
@@ -648,7 +648,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Black Listed Words : List of words that are black listed.]]></comment>
-	<position x="1720" y="100"/>
+	<position x="1660" y="80"/>
 	<column name="word" not-null="true">
 		<type name="character varying" length="128"/>
 		<comment><![CDATA[Word: Word that is blacklisted by the system]]></comment>
@@ -727,6 +727,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Specification ID : Device specification id refers to master.device_spec.id]]></comment>
 	</column>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ]]></comment>
+	</column>
 	<column name="lang_code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
@@ -797,6 +801,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Specification ID : Device specification id refers to master.device_spec.id]]></comment>
 	</column>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ]]></comment>
+	</column>
 	<column name="lang_code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
@@ -842,7 +850,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Device Specification :  Specification of devices for each device type that are supported by system for various process requirements, like scanning, printing, photo, biometric etc]]></comment>
-	<position x="2660" y="1100"/>
+	<position x="2580" y="680"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Device Specification ID : Unique ID generated / assigned for device specification]]></comment>
@@ -1708,6 +1716,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Machine Specification ID : Machince specification id refers to master.machine_spec.id]]></comment>
 	</column>
+	<column name="public_key">
+		<type name="bytea" length="0"/>
+		<comment><![CDATA[Public Key: Public key of the machine,  This will be Machine Identification TPM Endorsement key]]></comment>
+	</column>
+	<column name="key_index">
+		<type name="character varying" length="128"/>
+		<comment><![CDATA[Key Index: Fingerprint[Unique Hash ]  for the TPM public key]]></comment>
+	</column>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ]]></comment>
+	</column>
 	<column name="lang_code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
@@ -1739,14 +1759,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="del_dtimes">
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
-	</column>
-	<column name="public_key">
-		<type name="bytea" length="0"/>
-		<comment><![CDATA[Public Key: Public key of the machine,  This will be Machine Identification TPM Endorsement key]]></comment>
-	</column>
-	<column name="key_index">
-		<type name="character varying" length="128"/>
-		<comment><![CDATA[Key Index: Fingerprint[Unique Hash ]  for the TPM public key]]></comment>
 	</column>
 	<constraint name="pk_machm_id" type="pk-constr" table="master.machine_master">
 		<columns names="id,lang_code" ref-type="src-columns"/>
@@ -1786,6 +1798,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Machine Specification ID : Machince specification id refers to master.machine_spec.id]]></comment>
 	</column>
+	<column name="public_key">
+		<type name="bytea" length="0"/>
+		<comment><![CDATA[Public Key: Public key of the machine,  This will be Machine Identification TPM Endorsement key]]></comment>
+	</column>
+	<column name="key_index">
+		<type name="character varying" length="128"/>
+		<comment><![CDATA[Key Index: Fingerprint[Unique Hash ]  for the TPM public key]]></comment>
+	</column>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ]]></comment>
+	</column>
 	<column name="lang_code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
@@ -1821,14 +1845,6 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="eff_dtimes" not-null="true">
 		<type name="timestamp" length="0"/>
 		<comment><![CDATA[Effective Date Timestamp : This to track master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ).  The current record is effective from this date-time. ]]></comment>
-	</column>
-	<column name="public_key">
-		<type name="bytea" length="0"/>
-		<comment><![CDATA[Public Key: Public key of the machine,  This will be Machine Identification TPM Endorsement key]]></comment>
-	</column>
-	<column name="key_index">
-		<type name="character varying" length="128"/>
-		<comment><![CDATA[Key Index: Fingerprint[Unique Hash ]  for the TPM public key]]></comment>
 	</column>
 	<constraint name="pk_machm_h_id" type="pk-constr" table="master.machine_master_h">
 		<columns names="id,lang_code,eff_dtimes" ref-type="src-columns"/>
@@ -2386,6 +2402,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Holiday Location Code: Location code at which holidays are defined]]></comment>
 	</column>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ]]></comment>
+	</column>
 	<column name="lang_code" not-null="true">
 		<type name="character varying" length="3"/>
 		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
@@ -2507,6 +2527,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="holiday_loc_code">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Holiday Location Code: Location code at which holidays are defined]]></comment>
+	</column>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Zone Code : Unique zone code generated or entered by admin while creating zones, It is referred to master.zone.code. ]]></comment>
 	</column>
 	<column name="lang_code" not-null="true">
 		<type name="character varying" length="3"/>
@@ -2977,7 +3001,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Registration Center User History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.reg_center_user table description for details.   ]]></comment>
-	<position x="1960" y="2780"/>
+	<position x="800" y="2880"/>
 	<column name="regcntr_id" not-null="true">
 		<type name="character varying" length="10"/>
 		<comment><![CDATA[Registration Center ID : registration center id refers to master.registration_center.id]]></comment>
@@ -3305,7 +3329,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Status List : List of statuses used within each status types are configured in this table.]]></comment>
-	<position x="2560" y="480"/>
+	<position x="2320" y="1000"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : Status codes like STARTED, INPROGRESS, COMPLETED, FAILED etc for each status type with sequence number, with lang_cd for multi language]]></comment>
@@ -3363,7 +3387,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[Status Type : List of status types. These are used to group a set of statuses of a process.]]></comment>
-	<position x="2140" y="880"/>
+	<position x="1860" y="780"/>
 	<column name="code" not-null="true">
 		<type name="character varying" length="36"/>
 		<comment><![CDATA[Code : status types for ex.,  transaction,  registration, uin,  packet etc.]]></comment>
@@ -3849,7 +3873,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="master"/>
 	<role name="sysadmin"/>
 	<comment><![CDATA[User Detail History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.user_detail table description for details.]]></comment>
-	<position x="2200" y="120"/>
+	<position x="1940" y="80"/>
 	<column name="id" not-null="true">
 		<type name="character varying" length="256"/>
 		<comment><![CDATA[User ID : Unique ID generated / assigned for a user]]></comment>
@@ -4081,6 +4105,179 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<table name="zone" alias="zone">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Zone :  List of all zones and hierarchies defined for various zone requirements.  An example is provided for understanding the data to be populated.]]></comment>
+	<position x="2280" y="100"/>
+	<column name="code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Code : Unique zone code generated or entered by admin while creating zones. ]]></comment>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="128"/>
+		<comment><![CDATA[Name : Name of the zone]]></comment>
+	</column>
+	<column name="hierarchy_level" not-null="true">
+		<type name="smallint" length="0"/>
+		<comment><![CDATA[Hierarchy Level: Number of hierarchy levels defined by each zone in the country. Typically it starts with 0 for the topmost hierarchy level.]]></comment>
+	</column>
+	<column name="hierarchy_level_name" not-null="true">
+		<type name="character varying" length="64"/>
+		<comment><![CDATA[Hierarchy Level Name: Hierarchy level name defined by each country. for ex., ROOT ZONE->ZONELEVEL1->ZONELEVEL2-LEAFZONE.]]></comment>
+	</column>
+	<column name="hierarchy_path" alias="hirp">
+		<type name="character varying" length="1024"/>
+		<comment><![CDATA[Hierarchy Path : Path of the zone hierarchy. Hierarchy Path will have zone code of all the level from root to leaf and these codes will be saparated by saparators like / or ,....etc.]]></comment>
+	</column>
+	<column name="parent_zone_code">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Parent Zone Code: Parent zone code to refers to zone code as per hierarchy defined by each country]]></comment>
+	</column>
+	<column name="lang_code" not-null="true">
+		<type name="character varying" length="3"/>
+		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<constraint name="pk_zone_code" type="pk-constr" table="master.zone">
+		<columns names="code,lang_code" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_hierpath" type="uq-constr" table="master.zone">
+		<columns names="hierarchy_path,lang_code" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="zone_user" alias="zoneuser">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Zone User : Mapping table to assign a user to a zone that will be used for the zonal administration purpose]]></comment>
+	<position x="2300" y="420"/>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Code : Unique zone code generated or entered by admin while creating zones. ]]></comment>
+	</column>
+	<column name="usr_id" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[User ID :  ID of the user which is mapped to zone, This user will have defined roles based on which user is mapped to zones.]]></comment>
+	</column>
+	<column name="lang_code">
+		<type name="character varying" length="3"/>
+		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<constraint name="pk_zoneuser" type="pk-constr" table="master.zone_user">
+		<columns names="zone_code,usr_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="zone_user_h" alias="zoneuserh">
+	<schema name="master"/>
+	<role name="sysadmin"/>
+	<comment><![CDATA[Zone User History : This to track changes to master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ), Effective DateTimestamp is used for identifying latest or point in time information. Refer master.zone_user table description for details.]]></comment>
+	<position x="2760" y="380"/>
+	<column name="zone_code" not-null="true">
+		<type name="character varying" length="36"/>
+		<comment><![CDATA[Code : Unique zone code generated or entered by admin while creating zones. ]]></comment>
+	</column>
+	<column name="usr_id" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[User ID :  ID of the user which is mapped to zone, This user will have defined roles based on which user is mapped to zones.]]></comment>
+	</column>
+	<column name="lang_code">
+		<type name="character varying" length="3"/>
+		<comment><![CDATA[Language Code : For multilanguage implementation this attribute Refers master.language.code. The value of some of the attributes in current record is stored in this respective language. ]]></comment>
+	</column>
+	<column name="is_active" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Active : Flag to mark whether the record is Active or In-active]]></comment>
+	</column>
+	<column name="cr_by" not-null="true">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Created By : ID or name of the user who create / insert record]]></comment>
+	</column>
+	<column name="cr_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Created DateTimestamp : Date and Timestamp when the record is created/inserted]]></comment>
+	</column>
+	<column name="upd_by">
+		<type name="character varying" length="256"/>
+		<comment><![CDATA[Updated By : ID or name of the user who update the record with new values]]></comment>
+	</column>
+	<column name="upd_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.]]></comment>
+	</column>
+	<column name="is_deleted">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[IS_Deleted : Flag to mark whether the record is Soft deleted.]]></comment>
+	</column>
+	<column name="del_dtimes">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Deleted DateTimestamp : Date and Timestamp when the record is soft deleted with is_deleted=TRUE]]></comment>
+	</column>
+	<column name="eff_dtimes" not-null="true">
+		<type name="timestamp" length="0"/>
+		<comment><![CDATA[Effective Date Timestamp : This to track master record whenever there is an INSERT/UPDATE/DELETE ( soft delete ).  The current record is effective from this date-time. ]]></comment>
+	</column>
+	<constraint name="pk_zoneuserh" type="pk-constr" table="master.zone_user_h">
+		<columns names="zone_code,usr_id,eff_dtimes" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <constraint name="fk_appauthm_appdtl" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.app_detail" table="master.app_authentication_method">
 	<columns names="app_id,lang_code" ref-type="src-columns"/>
@@ -4147,6 +4344,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id,lang_code" ref-type="dst-columns"/>
 </constraint>
 
+<constraint name="fk_devicem_zone" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.zone" table="master.device_master">
+	<columns names="zone_code,lang_code" ref-type="src-columns"/>
+	<columns names="code,lang_code" ref-type="dst-columns"/>
+</constraint>
+
 <constraint name="fk_dspec_dtyp" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.device_type" table="master.device_spec">
 	<columns names="dtyp_code,lang_code" ref-type="src-columns"/>
@@ -4171,6 +4374,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="id,lang_code" ref-type="dst-columns"/>
 </constraint>
 
+<constraint name="fk_machm_zone" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.zone" table="master.machine_master">
+	<columns names="zone_code,lang_code" ref-type="src-columns"/>
+	<columns names="code,lang_code" ref-type="dst-columns"/>
+</constraint>
+
 <constraint name="fk_mspec_mtyp" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.machine_type" table="master.machine_spec">
 	<columns names="mtyp_code,lang_code" ref-type="src-columns"/>
@@ -4192,6 +4401,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="fk_regcntr_loc" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.location" table="master.registration_center">
 	<columns names="location_code,lang_code" ref-type="src-columns"/>
+	<columns names="code,lang_code" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_regcntr_zone" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.zone" table="master.registration_center">
+	<columns names="zone_code,lang_code" ref-type="src-columns"/>
 	<columns names="code,lang_code" ref-type="dst-columns"/>
 </constraint>
 
@@ -4366,6 +4581,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="fk_valdoc_doccat" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.doc_category" table="master.valid_document">
 	<columns names="doccat_code,lang_code" ref-type="src-columns"/>
+	<columns names="code,lang_code" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_zoneuser_zone" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="master.zone" table="master.zone_user">
+	<columns names="zone_code,lang_code" ref-type="src-columns"/>
 	<columns names="code,lang_code" ref-type="dst-columns"/>
 </constraint>
 
@@ -4655,6 +4876,30 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 custom-color="#0defdb"
 	 src-table="master.valid_document"
 	 dst-table="master.doc_category" reference-fk="fk_valdoc_doccat"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_zone_user_zone" type="relfk"
+	 src-table="master.zone_user"
+	 dst-table="master.zone" reference-fk="fk_zoneuser_zone"
+	 src-required="false" dst-required="false">
+	<label ref-type="src-label">
+		<position x="89.0591" y="2.725"/>
+	</label>
+</relationship>
+
+<relationship name="rel_machine_master_zone" type="relfk"
+	 src-table="master.machine_master"
+	 dst-table="master.zone" reference-fk="fk_machm_zone"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_device_master_zone" type="relfk"
+	 src-table="master.device_master"
+	 dst-table="master.zone" reference-fk="fk_devicem_zone"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_registration_center_zone" type="relfk"
+	 src-table="master.registration_center"
+	 dst-table="master.zone" reference-fk="fk_regcntr_zone"
 	 src-required="false" dst-required="false"/>
 
 <permission>
